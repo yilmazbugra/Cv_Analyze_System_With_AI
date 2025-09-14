@@ -167,32 +167,24 @@ cv-analysis-system/
 ## 🎨 Ekran Görüntüleri
 
 ### Ana Sayfa - CV Yükleme
-![Ana Sayfa](https://via.placeholder.com/800x600/2c5aa0/ffffff?text=CV+Yükleme+Sayfası)
+![CV Yükleme Sayfası](screenshots/cv_yükleme.png)
 *Modern drag & drop arayüzü ile kolay CV yükleme*
 
 ### İK Paneli - Adaylar
-![Adaylar](https://via.placeholder.com/800x600/27ae60/ffffff?text=Adaylar+Sayfası)
+![Adaylar Paneli](screenshots/adaylar_paneli.png)
 *Tüm adayları görüntüleme ve yönetme paneli*
 
 ### İK Paneli - İlanlar
-![İlanlar](https://via.placeholder.com/800x600/e74c3c/ffffff?text=İlanlar+Sayfası)
+![İlanlar Sayfası](screenshots/ilanlar.png)
 *İş ilanı oluşturma ve yönetme sayfası*
 
-### İK Paneli - Raporlar
-![Raporlar](https://via.placeholder.com/800x600/f39c12/ffffff?text=Raporlar+Sayfası)
+### İK Paneli - AI Raporlar
+![AI Raporlar](screenshots/ai_reports.png)
 *Analiz raporlarını görüntüleme ve indirme sayfası*
 
-### AI CV Analiz Raporu
-![AI Analiz Raporu](https://via.placeholder.com/800x600/9b59b6/ffffff?text=AI+CV+Analiz+Raporu)
+### AI CV Analiz Detayları
+![AI Analiz Detayları](screenshots/Ekran%20Resmi%202025-09-14%2019.41.03.png)
 *OpenAI GPT-3.5-turbo ile oluşturulan detaylı analiz raporu*
-
-### AI Analiz Detayları
-![AI Analiz Detayları](https://via.placeholder.com/800x600/8e44ad/ffffff?text=AI+Analiz+Detayları)
-*Beceri eşleştirme, deneyim değerlendirmesi ve öneriler*
-
-### PDF Rapor Örneği
-![PDF Rapor](https://via.placeholder.com/800x600/34495e/ffffff?text=PDF+Rapor+Örneği)
-*İndirilebilir PDF formatında detaylı analiz raporu*
 
 ## 🔒 Güvenlik
 
