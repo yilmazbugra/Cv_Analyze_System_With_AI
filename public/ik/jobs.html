@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İK Paneli - İlanlar</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="hr-container">
+        <div class="hr-header">
+            <h1>İK Paneli - İlanlar</h1>
+            <div class="nav-links">
+                <a href="candidates.html">Adaylar</a>
+                <a href="jobs.html" class="active">İlanlar</a>
+                <a href="reports.html">Raporlar</a>
+                <a href="#" onclick="logout()">Çıkış</a>
+            </div>
+        </div>
+
+        <div class="hr-content">
+            <div class="page-header">
+                <h2>İlan Listesi</h2>
+                <button onclick="showCreateJobModal()" class="btn btn-success">Yeni İlan</button>
+            </div>
+
+            <div class="table-container">
+                <table id="jobsTable">
+                    <thead>
+                        <tr>
+                            <th>Başlık</th>
+                            <th>Departman</th>
+                            <th>Deneyim Seviyesi</th>
+                            <th>Oluşturma Tarihi</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="5" class="text-center loading">Yükleniyor...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Job Modal -->
+    <div id="createJobModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Yeni İlan Oluştur</h3>
+                <span class="close" onclick="closeCreateJobModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="createJobForm">
+                    <div class="form-group">
+                        <label for="title">İlan Başlığı</label>
+                        <input type="text" id="title" name="title" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">İş Açıklaması</label>
+                        <textarea id="description" name="description" class="form-control" rows="4" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="requirements">Gereksinimler</label>
+                        <textarea id="requirements" name="requirements" class="form-control" rows="4" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location">Lokasyon</label>
+                        <input type="text" id="location" name="location" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="department">Departman</label>
+                        <input type="text" id="department" name="department" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="experience_level">Deneyim Seviyesi</label>
+                        <select id="experience_level" name="experience_level" class="form-control">
+                            <option value="">Seçiniz</option>
+                            <option value="Stajyer">Stajyer</option>
+                            <option value="Junior">Junior</option>
+                            <option value="Mid-Level">Mid-Level</option>
+                            <option value="Senior">Senior</option>
+                            <option value="Lead">Lead</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="employment_type">İstihdam Türü</label>
+                        <select id="employment_type" name="employment_type" class="form-control">
+                            <option value="">Seçiniz</option>
+                            <option value="Tam Zamanlı">Tam Zamanlı</option>
+                            <option value="Yarı Zamanlı">Yarı Zamanlı</option>
+                            <option value="Sözleşmeli">Sözleşmeli</option>
+                            <option value="Freelance">Freelance</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="salary_range">Maaş Aralığı</label>
+                        <input type="text" id="salary_range" name="salary_range" class="form-control" placeholder="örn: 8000-12000 TL">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">İlan Oluştur</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Job Modal -->
+    <div id="editJobModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>İlan Düzenle</h3>
+                <span class="close" onclick="closeEditModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editJobForm">
+                    <input type="hidden" id="editJobId" name="id">
+                    
+                    <div class="form-group">
+                        <label for="editTitle">İlan Başlığı</label>
+                        <input type="text" id="editTitle" name="title" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editDescription">İş Açıklaması</label>
+                        <textarea id="editDescription" name="description" class="form-control" rows="4" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editRequirements">Gereksinimler</label>
+                        <textarea id="editRequirements" name="requirements" class="form-control" rows="4" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editLocation">Lokasyon</label>
+                        <input type="text" id="editLocation" name="location" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editDepartment">Departman</label>
+                        <input type="text" id="editDepartment" name="department" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editExperienceLevel">Deneyim Seviyesi</label>
+                        <select id="editExperienceLevel" name="experience_level" class="form-control">
+                            <option value="">Seçiniz</option>
+                            <option value="Stajyer">Stajyer</option>
+                            <option value="Junior">Junior</option>
+                            <option value="Mid-Level">Mid-Level</option>
+                            <option value="Senior">Senior</option>
+                            <option value="Lead">Lead</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editEmploymentType">İstihdam Türü</label>
+                        <select id="editEmploymentType" name="employment_type" class="form-control">
+                            <option value="">Seçiniz</option>
+                            <option value="Tam Zamanlı">Tam Zamanlı</option>
+                            <option value="Yarı Zamanlı">Yarı Zamanlı</option>
+                            <option value="Sözleşmeli">Sözleşmeli</option>
+                            <option value="Freelance">Freelance</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editSalaryRange">Maaş Aralığı</label>
+                        <input type="text" id="editSalaryRange" name="salary_range" class="form-control" placeholder="örn: 8000-12000 TL">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Güncelle</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('hr_token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Initialize HR Panel for jobs page
+            window.hrPanel = new HRPanel();
+            window.hrPanel.loadJobs();
+        });
+
+        function logout() {
+            localStorage.removeItem('hr_token');
+            window.location.href = 'login.html';
+        }
+
+        function showCreateJobModal() {
+            document.getElementById('createJobModal').style.display = 'block';
+            document.body.classList.add('modal-open');
+        }
+
+        function closeCreateJobModal() {
+            document.getElementById('createJobModal').style.display = 'none';
+            document.body.classList.remove('modal-open');
+            document.getElementById('createJobForm').reset();
+        }
+
+        function closeEditModal() {
+            const modal = document.getElementById('editJobModal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.classList.remove('modal-open');
+            }
+        }
+
+        // Create job form submission
+        document.getElementById('createJobForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const jobData = {
+                title: formData.get('title'),
+                description: formData.get('description'),
+                requirements: formData.get('requirements'),
+                location: formData.get('location'),
+                department: formData.get('department'),
+                experience_level: formData.get('experience_level'),
+                employment_type: formData.get('employment_type'),
+                salary_range: formData.get('salary_range')
+            };
+
+            try {
+                const response = await fetch('/api/hr/jobs', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('hr_token')}`
+                    },
+                    body: JSON.stringify(jobData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('İlan oluşturulamadı');
+                }
+
+                alert('İlan başarıyla oluşturuldu');
+                closeCreateJobModal();
+                window.hrPanel.loadJobs();
+            } catch (error) {
+                console.error('Create job error:', error);
+                alert('İlan oluşturulamadı: ' + error.message);
+            }
+        });
+
+        // Edit job form submission
+        document.getElementById('editJobForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (window.hrPanel) {
+                window.hrPanel.updateJob();
+            }
+        });
+    </script>
+    <script src="../script.js"></script>
+</body>
+</html>

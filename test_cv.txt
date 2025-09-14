@@ -1,0 +1,11 @@
+Ad: Test User
+Soyad: Test
+E-posta: test@example.com
+Telefon: 555-1234
+
+Deneyim:
+- 5 yıl yazılım geliştirme
+- Python, JavaScript, React
+
+Eğitim:
+- Bilgisayar Mühendisliği Lisans

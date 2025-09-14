@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Analiz Sistemi</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* CV Upload Page Specific Styles */
+        .cv-upload-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .cv-upload-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .upload-header {
+            margin-bottom: 40px;
+        }
+
+        .upload-header h1 {
+            color: #2c5aa0;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .upload-header p {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 0;
+        }
+
+        .upload-zone {
+            border: 3px dashed #ddd;
+            border-radius: 15px;
+            padding: 60px 40px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            background: #fafafa;
+        }
+
+        .upload-zone:hover {
+            border-color: #2c5aa0;
+            background: #f0f4ff;
+            transform: translateY(-2px);
+        }
+
+        .upload-zone.dragover {
+            border-color: #2c5aa0;
+            background: #e8f2ff;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #2c5aa0;
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .upload-subtext {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, #2c5aa0, #1e3a8a);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(44, 90, 160, 0.3);
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 90, 160, 0.4);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .selected-files {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .selected-files h3 {
+            color: #2c5aa0;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .file-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #2c5aa0;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .file-icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            color: #2c5aa0;
+        }
+
+        .file-details h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .file-details p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            background: #c82333;
+            transform: scale(1.05);
+        }
+
+        .upload-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .upload-all-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .upload-all-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .upload-all-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .clear-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2c5aa0, #28a745);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .upload-status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .upload-status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .upload-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .upload-status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .features {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature h3 {
+            color: #2c5aa0;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .feature p {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+
+        .footer p {
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .footer a {
+            color: #2c5aa0;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .cv-upload-card {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .upload-zone {
+                padding: 40px 20px;
+            }
+
+            .upload-header h1 {
+                font-size: 2rem;
+            }
+
+            .upload-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .file-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .file-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cv-upload-container">
+        <div class="cv-upload-card">
+            <div class="upload-header">
+                <h1>CV Analiz Sistemi</h1>
+                <p>CV'nizi yükleyin, AI analizi ile değerlendirilsin</p>
+            </div>
+
+            <div class="upload-zone" id="uploadZone">
+                <div class="upload-icon">📄</div>
+                <div class="upload-text">CV dosyalarınızı buraya sürükleyip bırakın</div>
+                <div class="upload-subtext">veya</div>
+                <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                    Dosya Seç
+                </button>
+                <div class="upload-subtext" style="margin-top: 15px;">
+                    Desteklenen formatlar: PDF, DOCX<br>
+                    Maksimum dosya boyutu: 10MB
+                </div>
+                <input type="file" id="fileInput" class="file-input" accept=".pdf,.docx" multiple>
+            </div>
+
+            <div class="selected-files" id="selectedFiles" style="display: none;">
+                <h3>Seçilen Dosyalar</h3>
+                <div class="file-list" id="fileList"></div>
+                <div class="upload-actions">
+                    <button class="upload-all-btn" id="uploadAllBtn" onclick="uploadAllFiles()">
+                        Tümünü Yükle
+                    </button>
+                    <button class="clear-btn" onclick="clearSelectedFiles()">
+                        Temizle
+                    </button>
+                </div>
+                <div class="progress-bar" id="progressBar" style="display: none;">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="upload-status" id="uploadStatus" style="display: none;"></div>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Hızlı Analiz</h3>
+                    <p>AI teknolojisi ile CV'niz anında analiz edilir</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <h3>Detaylı Rapor</h3>
+                    <p>Kapsamlı değerlendirme ve öneriler alın</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Güvenli</h3>
+                    <p>Dosyalarınız güvenli şekilde işlenir</p>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>&copy; 2025 CV Analiz Sistemi. Tüm hakları saklıdır.</p>
+                <p><a href="/ik/login.html">İK Paneli</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFiles = [];
+        let isUploading = false;
+
+        // DOM Elements
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+        const selectedFilesDiv = document.getElementById('selectedFiles');
+        const fileList = document.getElementById('fileList');
+        const uploadAllBtn = document.getElementById('uploadAllBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const uploadStatus = document.getElementById('uploadStatus');
+
+        // Event Listeners
+        uploadZone.addEventListener('click', () => fileInput.click());
+        uploadZone.addEventListener('dragover', handleDragOver);
+        uploadZone.addEventListener('dragleave', handleDragLeave);
+        uploadZone.addEventListener('drop', handleDrop);
+        fileInput.addEventListener('change', handleFileSelect);
+
+        // Drag and Drop Handlers
+        function handleDragOver(e) {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files);
+            processFiles(files);
+        }
+
+        function handleFileSelect(e) {
+            const files = Array.from(e.target.files);
+            processFiles(files);
+        }
+
+        // File Processing
+        function processFiles(files) {
+            // Eğer dosya yoksa işlemi durdur
+            if (!files || files.length === 0) {
+                return;
+            }
+
+            const validFiles = files.filter(file => {
+                const ext = file.name.toLowerCase().split('.').pop();
+                return ['pdf', 'docx'].includes(ext) && file.size <= 10 * 1024 * 1024;
+            });
+
+            if (validFiles.length === 0) {
+                showStatus('Lütfen geçerli dosya formatları seçin (PDF, DOCX) ve dosya boyutunun 10MB\'dan küçük olduğundan emin olun', 'error');
+                return;
+            }
+
+            if (validFiles.length !== files.length) {
+                showStatus(`${validFiles.length} dosya geçerli, ${files.length - validFiles.length} dosya geçersiz format veya çok büyük`, 'info');
+            }
+
+            selectedFiles = [...selectedFiles, ...validFiles];
+            displaySelectedFiles();
+        }
+
+        // Display Selected Files
+        function displaySelectedFiles() {
+            if (selectedFiles.length === 0) {
+                selectedFilesDiv.style.display = 'none';
+                return;
+            }
+
+            selectedFilesDiv.style.display = 'block';
+            fileList.innerHTML = '';
+
+            selectedFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div class="file-info">
+                        <div class="file-icon">${getFileIcon(file.name)}</div>
+                        <div class="file-details">
+                            <h4>${file.name}</h4>
+                            <p>${formatFileSize(file.size)}</p>
+                        </div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="remove-btn" onclick="removeFile(${index})">Kaldır</button>
+                    </div>
+                `;
+                fileList.appendChild(fileItem);
+            });
+
+            updateUploadButton();
+        }
+
+        // Helper Functions
+        function getFileIcon(filename) {
+            const ext = filename.toLowerCase().split('.').pop();
+            return ext === 'pdf' ? '📄' : '📝';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function updateUploadButton() {
+            uploadAllBtn.disabled = selectedFiles.length === 0 || isUploading;
+            uploadAllBtn.textContent = isUploading ? 'Yükleniyor...' : `Tümünü Yükle (${selectedFiles.length})`;
+        }
+
+        function showStatus(message, type) {
+            uploadStatus.textContent = message;
+            uploadStatus.className = `upload-status ${type}`;
+            uploadStatus.style.display = 'block';
+            
+            if (type === 'success') {
+                setTimeout(() => {
+                    uploadStatus.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // File Management
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            displaySelectedFiles();
+        }
+
+        function clearSelectedFiles() {
+            selectedFiles = [];
+            displaySelectedFiles();
+            // fileInput.value'yu temizlemeden önce event listener'ı geçici olarak kaldır
+            fileInput.removeEventListener('change', handleFileSelect);
+            fileInput.value = '';
+            // Event listener'ı tekrar ekle
+            fileInput.addEventListener('change', handleFileSelect);
+            hideProgress();
+            uploadStatus.style.display = 'none';
+        }
+
+        // Upload Functions
+        async function uploadAllFiles() {
+            if (selectedFiles.length === 0 || isUploading) return;
+
+            isUploading = true;
+            updateUploadButton();
+            showProgress();
+            showStatus('Dosyalar yükleniyor...', 'info');
+
+            let successCount = 0;
+            let errorCount = 0;
+
+            for (let i = 0; i < selectedFiles.length; i++) {
+                const file = selectedFiles[i];
+                const progress = ((i + 1) / selectedFiles.length) * 100;
+                updateProgress(progress);
+                showStatus(`Yükleniyor: ${file.name} (${i + 1}/${selectedFiles.length})`, 'info');
+
+                try {
+                    const result = await uploadSingleFile(file);
+                    if (result.success) {
+                        successCount++;
+                    } else {
+                        errorCount++;
+                    }
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    errorCount++;
+                }
+            }
+
+            isUploading = false;
+            updateUploadButton();
+            hideProgress();
+
+            if (successCount > 0) {
+                showStatus(`✅ ${successCount} dosya başarıyla yüklendi!${errorCount > 0 ? ` ⚠️ ${errorCount} dosya yüklenemedi` : ''}`, 'success');
+                if (errorCount === 0) {
+                    setTimeout(() => {
+                        clearSelectedFiles();
+                    }, 2000); // 2 saniye bekle, sonra temizle
+                }
+            } else {
+                showStatus('❌ Hiçbir dosya yüklenemedi! Lütfen dosya formatlarını kontrol edin.', 'error');
+            }
+        }
+
+        async function uploadSingleFile(file) {
+            const formData = new FormData();
+            formData.append('cv', file);
+
+            try {
+                const response = await fetch('/api/cv/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    console.log('File uploaded successfully:', data);
+                    return { success: true, data };
+                } else {
+                    console.error('Upload failed:', data.error);
+                    return { success: false, error: data.error };
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Progress Functions
+        function showProgress() {
+            progressBar.style.display = 'block';
+            updateProgress(0);
+        }
+
+        function updateProgress(percentage) {
+            progressFill.style.width = `${percentage}%`;
+        }
+
+        function hideProgress() {
+            progressBar.style.display = 'none';
+            updateProgress(0);
+        }
+
+        // Global Functions
+        window.removeFile = removeFile;
+        window.uploadAllFiles = uploadAllFiles;
+        window.clearSelectedFiles = clearSelectedFiles;
+    </script>
+</body>
+</html>

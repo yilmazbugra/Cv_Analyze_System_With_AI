@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İK Paneli - Raporlar</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="hr-container">
+        <div class="hr-header">
+            <h1>İK Paneli - Raporlar</h1>
+            <div class="nav-links">
+                <a href="candidates.html">Adaylar</a>
+                <a href="jobs.html">İlanlar</a>
+                <a href="reports.html" class="active">Raporlar</a>
+                <a href="#" onclick="logout()">Çıkış</a>
+            </div>
+        </div>
+
+        <div class="hr-content">
+            <div class="page-header">
+                <h2>Analiz Raporları</h2>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="searchInput">Arama</label>
+                    <input type="text" id="searchInput" class="filter-input" placeholder="Aday adı, referans no veya iş ilanı...">
+                </div>
+                
+                <div class="filter-group" id="tagFilter">
+                    <label>Etiketler</label>
+                    <button class="filter-btn">Etiketler</button>
+                    <div class="tag-dropdown" style="display: none;">
+                        <div class="tag-option">
+                            <input type="checkbox" id="tag-beklemede" value="Beklemede">
+                            <label for="tag-beklemede">Beklemede</label>
+                        </div>
+                        <div class="tag-option">
+                            <input type="checkbox" id="tag-ilk-gorusme" value="İlk Görüşme">
+                            <label for="tag-ilk-gorusme">İlk Görüşme</label>
+                        </div>
+                        <div class="tag-option">
+                            <input type="checkbox" id="tag-uygun-degil" value="Uygun Değil">
+                            <label for="tag-uygun-degil">Uygun Değil</label>
+                        </div>
+                        <div class="tag-option">
+                            <input type="checkbox" id="tag-beklet" value="Beklet">
+                            <label for="tag-beklet">Beklet</label>
+                        </div>
+                        <div class="tag-option">
+                            <input type="checkbox" id="tag-onaylandi" value="Onaylandı">
+                            <label for="tag-onaylandi">Onaylandı</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-group" id="scoreFilter">
+                    <label>Puanlar</label>
+                    <button class="filter-btn">Puanlar</button>
+                    <div class="score-dropdown" style="display: none;">
+                        <div class="tag-option">
+                            <input type="checkbox" id="score-90-100" value="90-100">
+                            <label for="score-90-100">90-100 (Mükemmel)</label>
+                        </div>
+                        <div class="tag-option">
+                            <input type="checkbox" id="score-80-89" value="80-89">
+                            <label for="score-80-89">80-89 (Çok İyi)</label>
+                        </div>
+                        <div class="tag-option">
+                            <input type="checkbox" id="score-70-79" value="70-79">
+                            <label for="score-70-79">70-79 (İyi)</label>
+                        </div>
+                        <div class="tag-option">
+                            <input type="checkbox" id="score-60-69" value="60-69">
+                            <label for="score-60-69">60-69 (Orta)</label>
+                        </div>
+                        <div class="tag-option">
+                            <input type="checkbox" id="score-50-59" value="50-59">
+                            <label for="score-50-59">50-59 (Zayıf)</label>
+                        </div>
+                        <div class="tag-option">
+                            <input type="checkbox" id="score-0-49" value="0-49">
+                            <label for="score-0-49">0-49 (Çok Zayıf)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <button onclick="applyFilters()" class="btn btn-primary">Filtrele</button>
+                    <button onclick="clearFilters()" class="btn btn-secondary">Temizle</button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table id="reportsTable">
+                    <thead>
+                        <tr>
+                            <th>Aday</th>
+                            <th>İş İlanı</th>
+                            <th>Etiket</th>
+                            <th>Puan</th>
+                            <th>Tarih</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="6" class="text-center loading">Yükleniyor...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        function logout() {
+            localStorage.removeItem('hr_token');
+            window.location.href = 'login.html';
+        }
+
+        // Check authentication and initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('hr_token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Initialize HR Panel for reports page
+            window.hrPanel = new HRPanel();
+            window.hrPanel.loadReports();
+            window.hrPanel.initTagFilter();
+            window.hrPanel.initScoreFilter();
+            
+            // Setup search input
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    if (window.hrPanel) {
+                        window.hrPanel.applyFilters();
+                    }
+                });
+            }
+            
+            // Setup filter buttons
+            const filterBtn = document.getElementById('filterBtn');
+            if (filterBtn) {
+                filterBtn.addEventListener('click', function() {
+                    if (window.hrPanel) {
+                        window.hrPanel.applyFilters();
+                    }
+                });
+            }
+            
+            const clearBtn = document.getElementById('clearBtn');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function() {
+                    if (window.hrPanel) {
+                        window.hrPanel.clearFilters();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
